@@ -125,25 +125,25 @@ provision LBaaSv1 resources.
 
 The F5 LBaaSv1 service provider drivers, running within the Neutron
 controller process(es), utilize Neutron RPC messaging queues to issue
-provisioning tasks to specific f5 agent processes. Upon starting and
+provisioning tasks to specific F5 agent processes. Upon starting and
 successfully communicating with configured TMOS device API endpoints,
 each agent process registers its own specific named queue to receive
 tasks from one or multiple Neutron controllers.
 
 ![](./images/plugin_agent_architecture.png)
 
-The f5 LBaaSv1 agents make callbacks to the f5 LBaaSv1 service provider
+The F5 LBaaSv1 agents make callbacks to the F5 LBaaSv1 service provider
 drivers to query additional Neutron network, port, and subnet
-information, allocate Neutron objects like fixed IP address for SelfIP
+information, allocate Neutron objects like fixed IP address for Self IP
 and SNAT translation addresses, and report provisioning and pool status.
 These callback requests are placed on an RPC message queue which is
-processed by all listening f5 LBaaSv1 service provider drivers in a
+processed by all listening F5 LBaaSv1 service provider drivers in a
 round robin fashion. Since all Neutron controller processes are working
 transactionally off the same backend database, it does not matter which
 of the available Neutron controller processes handle these callback
 requests.
 
-You **MUST** have at least one running f5 service provider driver in a
+You **MUST** have at least one running F5 service provider driver in a
 Neutron controller, and you **MUST** at least have one running agent
 process. Adding additional service provider drivers, one per Neutron
 controller, will scale out communications from agents to Neutron. Adding
@@ -162,10 +162,10 @@ class="command_text">environment\_prefix</span> as this will be
 interpreted by the scheduler as both agents provisioning the same set of
 TMOS devices.
 
-When a LBaaSv1 API interface is invoked, the f5 LBaaSv1 service provider
-schedules agent tasks based upon an f5 agent's availabilty as updated
+When a LBaaSv1 API interface is invoked, the F5 LBaaSv1 service provider
+schedules agent tasks based upon an F5 agent's availabilty as updated
 via the standard Neutron agent status messages. The agent status
-handling of f5 LBaaSv2 agents is the same agent registration and status
+handling of F5 LBaaSv2 agents is the same agent registration and status
 update mechanism used by the standard Neutron L3, Neutron DHCP, and
 compute node reference networking agent implementation.
 
@@ -217,7 +217,7 @@ Rad Hat example:
 f5-oslbaasv1-driver-1.0.10-1.noarch.el7.rpm</span>
 
 Changes to the neutron server configuration file will then need to be
-made to enable LBaaSv1 services and reference the f5 LBaaSv1 service
+made to enable LBaaSv1 services and reference the F5 LBaaSv1 service
 provider driver. Once the changes in configuration are made, the neutron
 server will then need to be restarted to accept them.
 
@@ -315,7 +315,7 @@ The service provider driver runs within the Neutron controller. When the
 service provider driver is loaded by the community LBaaS plugin, a named
 messaging queue is created which will be used to consume all inbound
 callbacks and status update requests from agents. By default the queue
-is global for all f5 LBaaSv1 agents. (To run multiple queues, see the
+is global for all F5 LBaaSv1 agents. (To run multiple queues, see the
 differentiated service section below) If mulitple Neutron controllers
 are started, the various service provider will all listen to the same
 named message queue. This provides controller redudancy and scale out
@@ -332,14 +332,14 @@ class="command_text">environment\_prefix</span> each agent will
 communicate with their configured iControl endpoints, assure that the
 TMOS systems meet minimal requirements, create a specific named queue
 unique to this specific agent for processing provisioning requests from
-service provider drivers, and then report as a valid f5 LBaaSv1 agent
+service provider drivers, and then report as a valid F5 LBaaSv1 agent
 via the standard Neutron controller Agent status queue. The agents
 continue to report their status to the agent queue on a periodic basis,
 every 10 seconds by default.
 
-When a request for a new pool is made to a Neutron controller, a f5
+When a request for a new pool is made to a Neutron controller, a F5
 service provider driver invokes the Tenant scheduler. The scheduler will
-query all f5 LBaaSv1 agents reporting active and what previously cretaed
+query all F5 LBaaSv1 agents reporting active and what previously cretaed
 pools are bound to each. If an active agent is found which already has a
 bound pool for the same <span class="command_text">tenant\_id</span> as
 the new pool to be created, that agent will be selected. Otherwise an
@@ -368,7 +368,7 @@ online at some point to process tasks for all of its bound pools.
 <span id="LBaaSv1 Differentiated Services and TMOS Scale Out" class="mw-headline"> LBaaSv1 Differentiated Services and TMOS Scale Out </span>
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
-The f5 LBaaSv1 service provider driver and agents support LBaaS
+The F5 LBaaSv1 service provider driver and agents support LBaaS
 deployments where multiple TMOS environments are required. In order to
 differentiate between these TMOS environments, distinct service provider
 entires need to be created in the Neutron controller configuration, one
@@ -684,7 +684,7 @@ with either hardware appliances or TMOS virtual editions:
 
 For the Neutron network topologies requiring dynamic L2 and L3
 provisioning of the TMOS devices, which includes all network topologies
-except global routed mode, the f5 LBaaSv1 iControl driver supports:
+except global routed mode, the F5 LBaaSv1 iControl driver supports:
 
 -   Provider VLANs - VLANs defined by the admin tenant and shared
 -   Tenant VLANs - VLANs defined by the admin tenant for other tenants
@@ -694,7 +694,7 @@ except global routed mode, the f5 LBaaSv1 iControl driver supports:
 
 ### VLANs
 
-For VLAN connectivity, the f5 TMOS devices use a mapping between the
+For VLAN connectivity, the F5 TMOS devices use a mapping between the
 Neutron network <span
 class="command_text">provider:physical\_network</span> attribute and TMM
 interface names. This is analogous to the Open vSwitch agents mapping
@@ -753,7 +753,7 @@ VE when running as a Nova guest instance.
 
 ### Tunnels
 
-For GRE and VxLAN tunnels, the f5 TMOS devices expect to communicate
+For GRE and VxLAN tunnels, the F5 TMOS devices expect to communicate
 with Open vSwitch VTEPs. The VTEP addresses for Open vSwitch VTEPs are
 learned from their registered Neutron agent configurations <span
 class="command_text">tunneling\_ip</span> attribute. I.E.:
@@ -786,7 +786,7 @@ class="command_text">tunneling\_ip</span> attribute. I.E.:
     | topic               | N/A                                  |
     +---------------------+--------------------------------------+
 
-The ML2 L2 Population service is supported by the f5 LBaaSv1 agent
+The ML2 L2 Population service is supported by the F5 LBaaSv1 agent
 iControl driver, such that only Open vSwitch agents hosting Members will
 have overlay tunnels built to them for Member IP access. When the ML2 L2
 Population service is used, static ARP entries will optionally be
@@ -797,11 +797,11 @@ segmentation models must be present. The port binding extensions and
 segmentation model are defined by default with the community ML2 core
 plugin and Open vSwitch agents on the compute nodes.
 
-When VIPs are placed on tenant overlay networks, the f5 LBaaSv1 agent
+When VIPs are placed on tenant overlay networks, the F5 LBaaSv1 agent
 will send tunnel update RPC messages to the Open vSwitch agents
 informing them of TMOS device VTEPs. This enables tenant guest virtual
 machines or network node services to interact with the TMOS provisioned
-VIPs across overlay networks. An f5 LBaaSv1 agent's connected TMOS VTEP
+VIPs across overlay networks. An F5 LBaaSv1 agent's connected TMOS VTEP
 addresses are placed in the agent's configurations and reported to
 Neutron. The VTEP addresses are listed as <span
 class="command_text">tunneling\_ips</span>.
@@ -872,7 +872,7 @@ routed mode, each tenant will also have a TMOS route domain created,
 providing segmentation for IP address spaces between tenants.
 
 If an associated Neutron network for a VIP or Member is marked as <span
-class="command_text">shared=True</span>, and the f5 LBaaSv1 agent is not
+class="command_text">shared=True</span>, and the F5 LBaaSv1 agent is not
 in global routed mode, all associated L2 and L3 objects will be created
 in the <span class="command_text">/Common</span> administrative
 partition and associated with route domain 0 (zero) on all TMOS devices.
@@ -891,7 +891,7 @@ The F5 iControl agent driver supports:
 <span id="Agent Configuration Items" class="mw-headline">Agent Configuration Items</span>
 -----------------------------------------------------------------------------------------
 
-The f5 LBaaSv1 agent has many configurable options which will effect its
+The F5 LBaaSv1 agent has many configurable options which will effect its
 provisioning behavior.
 
 The installation process will automatically start an agent process as a
@@ -899,7 +899,7 @@ service. You will need to stop the agent service, configure the <span
 class="command_text">/etc/neutron/f5-oslbaasv1-agent.init</span> file
 appropriately, and then restart the agent process.
 
-The default configuration file for the f5 LBaaSv1 agent is located at
+The default configuration file for the F5 LBaaSv1 agent is located at
 <span class="command_text">/etc/neutron/f5-oslbaasv1-agent.ini</span>.
 Below is a consideration of each setting in that configuration file. The
 configuration file installed with the agent package contains extensive
